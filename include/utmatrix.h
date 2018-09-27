@@ -47,14 +47,16 @@ public:
   // ввод-вывод
   friend istream& operator>>(istream &in, TVector &v)
   {
-    for (int i = 0; i < v.Size; i++)
+    for (int i = 0; i < (v.Size - v.StartIndex); i++)
       in >> v.pVector[i];
     return in;
   }
   friend ostream& operator<<(ostream &out, const TVector &v)
   {
-    for (int i = 0; i < v.Size; i++)
-      out << v.pVector[i] << ' ';
+	  for (int i = 0; i < v.StartIndex; i++)
+		  out << 0 << '\t';
+    for (int i = 0; i < (v.Size - v.StartIndex); i++)
+      out << v.pVector[i] << '\t';
     return out;
   }
 };
@@ -68,7 +70,7 @@ TVector<ValType>::TVector(int s, int si)
 		) throw 0;
 	Size = s;
 	StartIndex = si;
-	pVector = new ValType[Size - StartIndex];
+	pVector = new ValType[(Size - StartIndex)];
 	for (int i = 0; i < (Size - StartIndex); i++)
 		pVector[i] = (ValType)0;
 } /*-------------------------------------------------------------------------*/
@@ -80,7 +82,7 @@ TVector<ValType>::TVector(const TVector<ValType> &v)
 		return;
 	Size = v.Size;
 	StartIndex = v.StartIndex;
-	pVector = new ValType[Size - StartIndex];
+	pVector = new ValType[(Size - StartIndex)];
 	for (int i = 0; i < (Size - StartIndex); i++)
 		pVector[i] = v.pVector[i];
 } /*-------------------------------------------------------------------------*/
@@ -94,10 +96,10 @@ TVector<ValType>::~TVector()
 template <class ValType> // доступ
 ValType& TVector<ValType>::operator[](int pos)
 {
-	if (pos < 0
+	if (pos < StartIndex
 		|| (pos > (Size)))
 		throw 0;
-	return pVector[pos + StartIndex];
+	return pVector[pos - StartIndex];
 } /*-------------------------------------------------------------------------*/
 
 template <class ValType> // сравнение
